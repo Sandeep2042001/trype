@@ -11,8 +11,8 @@ php artisan view:clear || true
 # Create storage link if it doesn't exist
 php artisan storage:link || true
 
-# Run migrations (ignore errors for existing tables)
-php artisan migrate --force || true
+# Skip migrations since tables are already created manually
+echo "Skipping migrations - tables already exist"
 
 # Start the application
 php artisan serve --host=0.0.0.0 --port=$PORT
