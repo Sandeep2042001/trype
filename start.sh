@@ -38,6 +38,12 @@ php artisan migrate --force || echo "Migration failed, continuing..."
 echo "Running seeders..."
 php artisan db:seed --force || echo "Seeding failed, continuing..."
 
+# Clear all caches after migrations and seeding
+echo "Clearing caches after database operations..."
+php artisan config:clear || true
+php artisan cache:clear || true
+php artisan view:clear || true
+
 # Start the application
 echo "Starting Laravel application on port $PORT"
 echo "Application will be available at: http://0.0.0.0:$PORT"
