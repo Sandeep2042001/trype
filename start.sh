@@ -31,8 +31,12 @@ php debug.php
 echo "Testing database connection..."
 php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connected successfully'; } catch(Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); }" || echo "Database connection test failed"
 
-# Migrations and seeders are run during build phase
-echo "Migrations and seeders completed during build phase"
+# Run migrations and seeders now that database is available
+echo "Running migrations..."
+php artisan migrate --force || echo "Migration failed, continuing..."
+
+echo "Running seeders..."
+php artisan db:seed --force || echo "Seeding failed, continuing..."
 
 # Start the application
 echo "Starting Laravel application on port $PORT"
