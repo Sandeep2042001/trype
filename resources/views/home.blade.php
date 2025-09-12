@@ -8,7 +8,7 @@
     <!-- Hero Section with Search -->
 <section class="hero-section min-h-screen flex items-center justify-center relative overflow-hidden" 
     @if(\App\Models\Admin\Setting::get('hero_bg_image'))
-        style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('{{ filter_var(\App\Models\Admin\Setting::get('hero_bg_image'), FILTER_VALIDATE_URL) ? \App\Models\Admin\Setting::get('hero_bg_image') : asset(\App\Models\Admin\Setting::get('hero_bg_image')) }}'); background-size: cover; background-position: center;"
+        style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('{{ filter_var(\App\Models\Admin\Setting::get('hero_bg_image'), FILTER_VALIDATE_URL) ? \App\Models\Admin\Setting::get('hero_bg_image') : secure_asset(\App\Models\Admin\Setting::get('hero_bg_image')) }}'); background-size: cover; background-position: center;"
     @else
         class="hero-gradient" 
     @endif

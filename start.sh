@@ -27,9 +27,9 @@ php artisan storage:link || true
 echo "Testing PHP functionality..."
 php debug.php
 
-# Fix logo issue
-echo "Fixing logo configuration..."
-php fix-logo.php
+# Fix logo and hero image issues
+echo "Fixing logo and hero image configuration..."
+php fix-logo-hero.php
 
 # Test database connection
 echo "Testing database connection..."

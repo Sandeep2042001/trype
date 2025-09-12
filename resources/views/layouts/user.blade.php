@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <!-- Dynamic Button Colors CSS -->
-    <link rel="stylesheet" href="{{ route('dynamic.css') }}?v={{ \App\Models\Admin\Setting::get('css_version', time()) }}" type="text/css">
+    <link rel="stylesheet" href="{{ secure_url(route('dynamic.css')) }}?v={{ \App\Models\Admin\Setting::get('css_version', time()) }}" type="text/css">
     
     <style>
         input{

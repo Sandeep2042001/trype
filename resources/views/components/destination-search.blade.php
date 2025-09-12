@@ -66,7 +66,7 @@
             
             if (query.length < 2) return;
             
-            fetch(`/api/destinations/search?query=${encodeURIComponent(query)}`)
+            fetch(`${window.location.protocol}//${window.location.host}/api/destinations/search?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     searchResults.innerHTML = '';
