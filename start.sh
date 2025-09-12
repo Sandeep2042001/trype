@@ -2,6 +2,7 @@
 
 # Set the port from Railway environment variable
 export PORT=${PORT:-8000}
+echo "Railway PORT environment variable: $PORT"
 
 echo "=== Starting Laravel Application ==="
 echo "Port: $PORT"
