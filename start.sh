@@ -27,6 +27,10 @@ php artisan storage:link || true
 echo "Testing PHP functionality..."
 php debug.php
 
+# Fix logo issue
+echo "Fixing logo configuration..."
+php fix-logo.php
+
 # Test database connection
 echo "Testing database connection..."
 php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connected successfully'; } catch(Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); }" || echo "Database connection test failed"
