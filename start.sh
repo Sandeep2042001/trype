@@ -31,8 +31,8 @@ php debug.php
 echo "Testing database connection..."
 php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connected successfully'; } catch(Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); }" || echo "Database connection test failed"
 
-# Skip migrations since tables are already created manually
-echo "Skipping migrations - tables already exist"
+# Migrations and seeders are run during build phase
+echo "Migrations and seeders completed during build phase"
 
 # Start the application
 echo "Starting Laravel application on port $PORT"
