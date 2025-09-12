@@ -30,8 +30,9 @@ if (!is_dir($heroDir)) {
     echo "Created hero directory\n";
 }
 
-// Create default logo if none exists
-if (!$currentLogo) {
+// Create default logo if none exists or if current logo file doesn't exist
+$logoPath = $currentLogo ? public_path($currentLogo) : null;
+if (!$currentLogo || !file_exists($logoPath)) {
     echo "Creating default logo...\n";
     
     // Create a simple SVG logo
@@ -51,8 +52,9 @@ if (!$currentLogo) {
     echo "Default logo created and set\n";
 }
 
-// Create default hero image if none exists
-if (!$currentHero) {
+// Create default hero image if none exists or if current hero file doesn't exist
+$heroPath = $currentHero ? public_path($currentHero) : null;
+if (!$currentHero || !file_exists($heroPath)) {
     echo "Creating default hero image...\n";
     
     // Create a simple gradient hero image (1x1 pixel that will be stretched)
