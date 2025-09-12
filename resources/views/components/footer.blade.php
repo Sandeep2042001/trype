@@ -5,7 +5,7 @@
             <!-- Logo Area -->
             <div class="mb-8 lg:mb-0">
                 <a href="/" class="flex items-center space-x-2">
-                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-10 w-auto">
+                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-20 w-auto">
                 </a>
             </div>
               <!-- Newsletter Signup -->

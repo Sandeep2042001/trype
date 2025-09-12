@@ -59,7 +59,7 @@
             <!-- Logo -->
             <div class="flex items-center justify-center h-16 px-4 bg-gray-900">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center p-5">
-                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-8 w-auto">
+                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-16 w-auto">
                 </a>
             </div>
             

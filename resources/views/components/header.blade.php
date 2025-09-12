@@ -3,7 +3,7 @@
         <!-- Logo -->
         <div class="text-2xl font-bold">
             <a href="/" class="flex items-center space-x-2 transition transform hover:scale-105">
-                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-8 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-20 w-auto">
             </a>
         </div>
         
