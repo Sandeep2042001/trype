@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <!-- Dynamic Button Colors CSS -->
-    <link rel="stylesheet" href="{{ secure_url(route('dynamic.css')) }}?v={{ \App\Models\Admin\Setting::get('css_version', time()) }}" type="text/css">
+    <link rel="stylesheet" href="{{ route('dynamic.css') }}?v={{ \App\Models\Admin\Setting::get('css_version', time()) }}" type="text/css">
     <style>
        
         input:focus{
@@ -40,6 +40,6 @@
     
     
     @stack('scripts')
-    <script src="{{ secure_url(asset('js/quantity-selector.js')) }}" defer></script>
+    <script src="{{ asset('js/quantity-selector.js') }}" defer></script>
 </body>
 </html>
