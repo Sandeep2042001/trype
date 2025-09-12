@@ -14,20 +14,20 @@
                             <div class="hotel-location">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{ $hotel->city }}, {{ $hotel->country }}
-                            </div>
+        </div>
                             <div class="hotel-rating">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= $hotel->star_rating)
+                        @for($i = 1; $i <= 5; $i++)
+                            @if($i <= $hotel->star_rating)
                                         <i class="fas fa-star"></i>
-                                    @else
+                            @else
                                         <i class="far fa-star"></i>
-                                    @endif
-                                @endfor
+                            @endif
+                        @endfor
                                 <span class="rating-text">{{ number_format($hotel->rating, 1) }}/5</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
             @else
                 <div class="main-image placeholder">
                     <div class="placeholder-content">
@@ -36,8 +36,8 @@
                     </div>
                 </div>
             @endif
-        </div>
-        
+    </div>
+
         <!-- Thumbnail Gallery -->
         @if($hotel->images->count() > 1)
         <div class="thumbnail-gallery">
@@ -47,12 +47,12 @@
                     @if($index === 5 && $hotel->images->count() > 6)
                         <div class="more-images">
                             <span>+{{ $hotel->images->count() - 6 }}</span>
-                        </div>
-                    @endif
-                </div>
+                                    </div>
+                                @endif
+                            </div>
             @endforeach
-        </div>
-        @endif
+                    </div>
+                @endif
     </div>
 
     <!-- Main Content -->
@@ -79,17 +79,17 @@
                             <div class="feature">
                                 <i class="fas fa-utensils"></i>
                                 <span>Restaurant</span>
-                            </div>
                         </div>
                     </div>
+        </div>
 
                     <!-- Description -->
                     <div class="description-section">
                         <h3>About This Hotel</h3>
                         <div class="description-content">
                             {!! $hotel->description !!}
-                        </div>
                     </div>
+                </div>
 
                     <!-- Image Gallery Section -->
                     @if($hotel->images->count() > 0)
@@ -101,9 +101,9 @@
                                     <img src="{{ $image->image_path }}" alt="{{ $image->alt_text ?? $hotel->name }}" loading="lazy">
                                 </div>
                             @endforeach
-                        </div>
                     </div>
-                    @endif
+                </div>
+                @endif
 
                     <!-- Amenities -->
                     @if($hotel->amenities->count() > 0)
@@ -118,13 +118,13 @@
                                         <i class="fas fa-check"></i>
                                     @endif
                                     <span>{{ $amenity->name }}</span>
-                                </div>
-                            @endforeach
                         </div>
+                            @endforeach
                     </div>
-                    @endif
                 </div>
+                @endif
             </div>
+                        </div>
 
             <!-- Booking Sidebar -->
             <div class="col-lg-4">
@@ -160,22 +160,22 @@
                                         <option value="4">4 Guests</option>
                                         <option value="5">5+ Guests</option>
                                     </select>
-                                </div>
+                        </div>
 
                                 <div class="booking-summary">
                                     <div class="summary-item">
                                         <span>Room Rate</span>
                                         <span>{{ $hotel->price_range }}</span>
-                                    </div>
+                    </div>
                                     <div class="summary-item">
                                         <span>Taxes & Fees</span>
                                         <span>Included</span>
-                                    </div>
+                </div>
                                     <div class="summary-total">
                                         <span>Total</span>
                                         <span>{{ $hotel->price_range }}</span>
-                                    </div>
-                                </div>
+            </div>
+        </div>
 
                                 <button type="submit" class="btn-purchase">
                                     <i class="fas fa-credit-card"></i>
@@ -192,14 +192,14 @@
                             <div class="feature">
                                 <i class="fas fa-clock"></i>
                                 <span>Instant Confirmation</span>
-                            </div>
+                                </div>
                             <div class="feature">
                                 <i class="fas fa-undo"></i>
                                 <span>Free Cancellation</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -726,8 +726,8 @@
             // Update check-out minimum when check-in changes
             checkInInput.addEventListener('change', function() {
                 const checkInDate = new Date(this.value);
-                const nextDay = new Date(checkInDate);
-                nextDay.setDate(checkInDate.getDate() + 1);
+            const nextDay = new Date(checkInDate);
+            nextDay.setDate(checkInDate.getDate() + 1);
                 checkOutInput.min = nextDay.toISOString().split('T')[0];
                 
                 // If current check-out is before new minimum, update it

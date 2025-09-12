@@ -5,9 +5,8 @@
             <a href="/" class="flex items-center space-x-2 transition transform hover:scale-105">
                 @if(isset($settings['site_logo']))
                     <img
-                    src="{{ filter_var($settings['site_logo'], FILTER_VALIDATE_URL) ? $settings['site_logo'] : asset($settings['site_logo']) }}" 
-                    alt="{{ $settings['company_name'] ?? 'Tryp' }}" 
-                    class="h-8 w-auto">
+                    
+                    src="{{ $settings['site_logo'] }}" alt="{{ $settings['company_name'] ?? 'MyTravel' }}" >
                 @else
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5.5 16a.5.5 0 01-.5-.5v-6a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v6a.5.5 0 01-.5.5h-1zm3 0a.5.5 0 01-.5-.5v-6a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v6a.5.5 0 01-.5.5h-1zm4.5-.5a.5.5 0 00.5-.5v-6a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v6a.5.5 0 00.5.5h1z"/>

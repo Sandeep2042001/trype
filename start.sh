@@ -31,18 +31,8 @@ php debug.php
 echo "Testing database connection..."
 php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connected successfully'; } catch(Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); }" || echo "Database connection test failed"
 
-# Run migrations and seeders now that database is available
-echo "Running migrations..."
-php artisan migrate --force || echo "Migration failed, continuing..."
-
-echo "Running seeders..."
-php artisan db:seed --force || echo "Seeding failed, continuing..."
-
-# Clear all caches after migrations and seeding
-echo "Clearing caches after database operations..."
-php artisan config:clear || true
-php artisan cache:clear || true
-php artisan view:clear || true
+# Skip migrations since tables are already created manually
+echo "Skipping migrations - tables already exist"
 
 # Start the application
 echo "Starting Laravel application on port $PORT"

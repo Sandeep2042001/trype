@@ -7,16 +7,16 @@
     <!-- Hero Section with Search -->
     <!-- Hero Section with Search -->
 <section class="hero-section min-h-screen flex items-center justify-center relative overflow-hidden" 
-    @if(isset($settings['hero_bg_image']))
-        style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('{{ filter_var($settings['hero_bg_image']->value, FILTER_VALIDATE_URL) ? $settings['hero_bg_image']->value : asset($settings['hero_bg_image']->value) }}'); background-size: cover; background-position: center;"
+    @if(\App\Models\Admin\Setting::get('hero_bg_image'))
+        style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('{{ filter_var(\App\Models\Admin\Setting::get('hero_bg_image'), FILTER_VALIDATE_URL) ? \App\Models\Admin\Setting::get('hero_bg_image') : asset(\App\Models\Admin\Setting::get('hero_bg_image')) }}'); background-size: cover; background-position: center;"
     @else
         class="hero-gradient" 
     @endif
 >
     <div class="container mx-auto px-4 py-16 relative z-10">
         <div class="text-center text-white mb-12 max-w-4xl mx-auto">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">{{ $settings['hero_heading']->value ?? 'Discover Your Perfect Getaway' }}</h1>
-            <p class="text-xl md:text-2xl mb-8 drop-shadow-md">{{ $settings['hero_subheading']->value ?? 'Explore exclusive vacation packages and create memories that last a lifetime' }}</p>
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">{{ \App\Models\Admin\Setting::get('hero_heading', 'Discover Your Perfect Getaway') }}</h1>
+            <p class="text-xl md:text-2xl mb-8 drop-shadow-md">{{ \App\Models\Admin\Setting::get('hero_subheading', 'Explore exclusive vacation packages and create memories that last a lifetime') }}</p>
         </div>
         
         <div class="relative z-10 max-w-4xl mx-auto">

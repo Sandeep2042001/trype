@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\Admin\Setting;
+use App\Models\Setting;
 
 class ShareSettings
 {

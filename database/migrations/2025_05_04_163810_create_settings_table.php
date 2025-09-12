@@ -13,7 +13,7 @@ class CreateSettingsTable extends Migration
     {
         if (!Schema::hasTable('settings')) {
             Schema::create('settings', function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->id();
                 $table->string('key');
                 $table->text('value')->nullable();
                 $table->string('group')->default('general');
