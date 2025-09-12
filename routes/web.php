@@ -157,6 +157,7 @@ Route::prefix('hotels')->name('hotels.')->group(function () {
     Route::get('/search', [HotelController::class, 'search'])->name('search');
     Route::get('/destination/{destination}', [HotelController::class, 'byDestination'])->name('by-destination');
     Route::get('/destination/{destination}/{hotel:slug}', [HotelController::class, 'show'])->name('show');
+    Route::post('/destination/{destination}/{hotel:slug}/book', [HotelController::class, 'book'])->name('book');
 });
 
 // Admin Routes

@@ -1,480 +1,741 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0">
-    <!-- Hero Section -->
-    <div class="position-relative mb-4">
-        <div class="hotel-hero" style="height: 70vh; background: url('{{ $hotel->images->first() ? $hotel->images->first()->image_path : asset('storage/hotels/placeholder.jpg') }}') center/cover no-repeat;">
-            <div class="position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));"></div>
-        </div>
-        <div class="container position-absolute" style="bottom: 2rem; left: 50%; transform: translateX(-50%);">
-            <div class="text-white">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-transparent p-0">
-                        <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('hotels.index') }}" class="text-white">Hotels</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('hotels.by-destination', $destination) }}" class="text-white">{{ $destination->name }}</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">{{ $hotel->name }}</li>
-                    </ol>
-                </nav>
-                <h1 class="display-4 font-weight-bold mb-2">{{ $hotel->name }}</h1>
-                <div class="d-flex align-items-center">
-                    <div class="mr-4">
-                        @for($i = 1; $i <= 5; $i++)
-                            @if($i <= $hotel->star_rating)
-                                <i class="fas fa-star text-warning"></i>
-                            @else
-                                <i class="far fa-star text-warning"></i>
-                            @endif
-                        @endfor
-                    </div>
-                    <div>
-                        <i class="fas fa-map-marker-alt mr-2"></i>
-                        {{ $hotel->address }}, {{ $hotel->city }}, {{ $hotel->country }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Image Gallery -->
-        <div class="row mb-5">
-            @foreach($hotel->images->take(5) as $index => $image)
-                @if($index === 0)
-                    <div class="col-md-8 mb-3">
-                        <a href="{{ $image->image_path }}" data-fancybox="gallery" class="d-block h-100">
-                            <div class="rounded overflow-hidden h-100">
-                                <img src="{{ $image->image_path }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ $image->alt_text ?? $hotel->name }}">
+<div class="hotel-page">
+    <!-- Hero Section with Image Gallery -->
+    <div class="hero-section">
+        <div class="hero-image-container">
+            @if($hotel->images->count() > 0)
+                <div class="main-image">
+                    <img src="{{ $hotel->images->first()->image_path }}" alt="{{ $hotel->name }}" id="mainImage">
+                    <div class="image-overlay">
+                        <div class="hotel-info">
+                            <h1 class="hotel-title">{{ $hotel->name }}</h1>
+                            <div class="hotel-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ $hotel->city }}, {{ $hotel->country }}
                             </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row">
-                @else
-                    <div class="col-6 mb-3">
-                        <a href="{{ $image->image_path }}" data-fancybox="gallery" class="d-block">
-                            <div class="rounded overflow-hidden" style="height: 200px;">
-                                <img src="{{ $image->image_path }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ $image->alt_text ?? $hotel->name }}">
-                                @if($index === 4 && $hotel->images->count() > 5)
-                                    <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top: 0; left: 0; background: rgba(0,0,0,0.5);">
-                                        <span class="text-white h4 mb-0">+{{ $hotel->images->count() - 5 }} more</span>
-                                    </div>
-                                @endif
+                            <div class="hotel-rating">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $hotel->star_rating)
+                                        <i class="fas fa-star"></i>
+                                    @else
+                                        <i class="far fa-star"></i>
+                                    @endif
+                                @endfor
+                                <span class="rating-text">{{ number_format($hotel->rating, 1) }}/5</span>
                             </div>
-                        </a>
-                    </div>
-                @endif
-            @endforeach
                         </div>
                     </div>
+                </div>
+            @else
+                <div class="main-image placeholder">
+                    <div class="placeholder-content">
+                        <i class="fas fa-hotel fa-3x"></i>
+                        <h1>{{ $hotel->name }}</h1>
+                    </div>
+                </div>
+            @endif
         </div>
+        
+        <!-- Thumbnail Gallery -->
+        @if($hotel->images->count() > 1)
+        <div class="thumbnail-gallery">
+            @foreach($hotel->images->take(6) as $index => $image)
+                <div class="thumbnail {{ $index === 0 ? 'active' : '' }}" onclick="changeMainImage('{{ $image->image_path }}', this)">
+                    <img src="{{ $image->image_path }}" alt="{{ $image->alt_text ?? $hotel->name }}">
+                    @if($index === 5 && $hotel->images->count() > 6)
+                        <div class="more-images">
+                            <span>+{{ $hotel->images->count() - 6 }}</span>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+        @endif
+    </div>
 
+    <!-- Main Content -->
+    <div class="container">
         <div class="row">
+            <!-- Hotel Details -->
             <div class="col-lg-8">
-                <!-- About Section -->
-                <div class="card shadow-sm border-0 rounded-lg mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title border-bottom pb-3">About {{ $hotel->name }}</h3>
-                        <div class="hotel-description">
+                <div class="hotel-details">
+                    <!-- Price Section -->
+                    <div class="price-section">
+                        <div class="price-main">
+                            <span class="price-amount">{{ $hotel->price_range }}</span>
+                            <span class="price-period">per night</span>
+                        </div>
+                        <div class="price-features">
+                            <div class="feature">
+                                <i class="fas fa-wifi"></i>
+                                <span>Free WiFi</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-parking"></i>
+                                <span>Free Parking</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-utensils"></i>
+                                <span>Restaurant</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="description-section">
+                        <h3>About This Hotel</h3>
+                        <div class="description-content">
                             {!! $hotel->description !!}
                         </div>
                     </div>
-                </div>
 
-                <!-- Amenities Section -->
-                @if($hotel->amenities->count() > 0)
-                <div class="card shadow-sm border-0 rounded-lg mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title border-bottom pb-3">Amenities & Services</h3>
-                        <div class="row">
-                            @foreach($hotel->amenities->groupBy('category') as $category => $amenities)
-                                <div class="col-md-4 mb-4">
-                                    <h5 class="text-primary">{{ ucfirst($category) }}</h5>
-                                    <ul class="list-unstyled amenities-list">
-                                        @foreach($amenities as $amenity)
-                                            <li class="mb-3 d-flex align-items-center">
-                                                @if($amenity->icon)
-                                                    <i class="{{ $amenity->icon }} fa-lg text-primary mr-3"></i>
-                                                @else
-                                                    <i class="fas fa-check fa-lg text-primary mr-3"></i>
-                                                @endif
-                                                <div>
-                                                    <span class="d-block">{{ $amenity->name }}</span>
-                                                    @if($amenity->pivot->details)
-                                                        <small class="text-muted">{{ $amenity->pivot->details }}</small>
-                                                    @endif
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                    <!-- Image Gallery Section -->
+                    @if($hotel->images->count() > 0)
+                    <div class="gallery-section">
+                        <h3>Hotel Gallery</h3>
+                        <div class="gallery-grid">
+                            @foreach($hotel->images as $index => $image)
+                                <div class="gallery-item">
+                                    <img src="{{ $image->image_path }}" alt="{{ $image->alt_text ?? $hotel->name }}" loading="lazy">
                                 </div>
                             @endforeach
                         </div>
                     </div>
-                </div>
-                @endif
+                    @endif
 
-                <!-- Location Section -->
-                @if($hotel->latitude && $hotel->longitude)
-                <div class="card shadow-sm border-0 rounded-lg mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="card-title border-bottom pb-3">Location</h3>
-                        <div id="map" class="rounded-lg" style="height: 400px;"></div>
-                        <div class="mt-3">
-                            <i class="fas fa-map-marker-alt text-primary mr-2"></i>
-                            {{ $hotel->address }}, {{ $hotel->city }}{{ $hotel->state ? ', ' . $hotel->state : '' }}, {{ $hotel->country }} {{ $hotel->postal_code ?? '' }}
+                    <!-- Amenities -->
+                    @if($hotel->amenities->count() > 0)
+                    <div class="amenities-section">
+                        <h3>Amenities & Services</h3>
+                        <div class="amenities-grid">
+                            @foreach($hotel->amenities->take(8) as $amenity)
+                                <div class="amenity-item">
+                                    @if($amenity->icon)
+                                        <i class="{{ $amenity->icon }}"></i>
+                                    @else
+                                        <i class="fas fa-check"></i>
+                                    @endif
+                                    <span>{{ $amenity->name }}</span>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
                 </div>
-                @endif
             </div>
 
+            <!-- Booking Sidebar -->
             <div class="col-lg-4">
-                <!-- Booking Card -->
-                <div class="card shadow border-0 rounded-lg mb-4 sticky-top" style="top: 2rem;">
-                    <div class="card-body p-4">
-                        <div class="text-center mb-4">
-                            <h3 class="text-primary mb-1">{{ $hotel->price_range }}</h3>
-                            <p class="text-muted mb-0">per night</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="font-weight-bold">Guest Rating</span>
-                                <div>
-                                    <span class="badge badge-primary p-2 rounded-lg">
-                                        {{ number_format($hotel->rating, 1) }}/5
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="font-weight-bold">Hotel Category</span>
-                                <div>
-                                    @for($i = 1; $i <= $hotel->star_rating; $i++)
-                                        <i class="fas fa-star text-warning"></i>
-                                    @endfor
-                                </div>
+                <div class="booking-sidebar">
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <h3>Book Your Stay</h3>
+                            <div class="price-display">
+                                <span class="price">{{ $hotel->price_range }}</span>
+                                <span class="period">per night</span>
                             </div>
                         </div>
 
-                        <hr class="my-4">
+                        <div class="booking-form">
+                            <form action="{{ route('hotels.book', ['destination' => $destination, 'hotel' => $hotel]) }}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <label>Check-in Date</label>
+                                    <input type="date" name="check_in" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Check-out Date</label>
+                                    <input type="date" name="check_out" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Guests</label>
+                                    <select name="guests" class="form-control" required>
+                                        <option value="1">1 Guest</option>
+                                        <option value="2">2 Guests</option>
+                                        <option value="3">3 Guests</option>
+                                        <option value="4">4 Guests</option>
+                                        <option value="5">5+ Guests</option>
+                                    </select>
+                                </div>
 
-                        <div class="mb-4">
-                            <h5 class="font-weight-bold mb-3">Quick Info</h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-2">
-                                    <i class="far fa-clock text-primary mr-2"></i>
-                                    Check-in: {{ $hotel->check_in_time }}
-                                </li>
-                                <li class="mb-2">
-                                    <i class="far fa-clock text-primary mr-2"></i>
-                                    Check-out: {{ $hotel->check_out_time }}
-                                </li>
-                                @if($hotel->phone)
-                                    <li class="mb-2">
-                                        <i class="fas fa-phone text-primary mr-2"></i>
-                                        {{ $hotel->phone }}
-                                    </li>
-                                @endif
-                                @if($hotel->email)
-                                    <li class="mb-2">
-                                        <i class="fas fa-envelope text-primary mr-2"></i>
-                                        {{ $hotel->email }}
-                                    </li>
-                                @endif
-                            </ul>
+                                <div class="booking-summary">
+                                    <div class="summary-item">
+                                        <span>Room Rate</span>
+                                        <span>{{ $hotel->price_range }}</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span>Taxes & Fees</span>
+                                        <span>Included</span>
+                                    </div>
+                                    <div class="summary-total">
+                                        <span>Total</span>
+                                        <span>{{ $hotel->price_range }}</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-purchase">
+                                    <i class="fas fa-credit-card"></i>
+                                    Purchase Now
+                                </button>
+                            </form>
                         </div>
 
-                        <button class="btn btn-primary btn-lg btn-block mb-3" data-toggle="modal" data-target="#bookingModal">
-                            Book Now
-                        </button>
-                        <button class="btn btn-outline-primary btn-block">
-                            <i class="far fa-heart mr-2"></i>
-                            Add to Wishlist
-                        </button>
+                        <div class="booking-features">
+                            <div class="feature">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Secure Payment</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-clock"></i>
+                                <span>Instant Confirmation</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-undo"></i>
+                                <span>Free Cancellation</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Nearby Hotels Section -->
-        @if($nearbyHotels->count() > 0)
-        <div class="mt-5">
-            <h3 class="mb-4">Other Hotels in {{ $destination->name }}</h3>
-            <div class="row">
-                @foreach($nearbyHotels as $nearbyHotel)
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 border-0 shadow-sm rounded-lg overflow-hidden">
-                            <div class="position-relative">
-                                <img src="{{ $nearbyHotel->images->first() ? $nearbyHotel->images->first()->image_path : asset('storage/hotels/placeholder.jpg') }}" 
-                                     class="card-img-top" alt="{{ $nearbyHotel->name }}" 
-                                     style="height: 200px; object-fit: cover;">
-                                @if($nearbyHotel->is_featured)
-                                    <div class="badge badge-primary position-absolute px-3 py-2" 
-                                         style="top: 1rem; right: 1rem;">Featured</div>
-                                @endif
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title mb-1">{{ $nearbyHotel->name }}</h5>
-                                <p class="text-muted small mb-2">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>
-                                    {{ $nearbyHotel->city }}, {{ $nearbyHotel->country }}
-                                </p>
-                                <div class="mb-2">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        @if($i <= $nearbyHotel->star_rating)
-                                            <i class="fas fa-star text-warning"></i>
-                                        @else
-                                            <i class="far fa-star text-warning"></i>
-                                        @endif
-                                    @endfor
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="font-weight-bold text-primary">{{ $nearbyHotel->price_range }}</span>
-                                    <a href="{{ route('hotels.show', ['destination' => $destination, 'hotel' => $nearbyHotel->slug]) }}" 
-                                       class="btn btn-outline-primary btn-sm">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
     </div>
 </div>
 
-<!-- Booking Modal -->
 @section('styles')
 <style>
-    .hotel-description {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        color: #4a5568;
+    /* Hotel Page Styles */
+    .hotel-page {
+        background: #f8f9fa;
+        min-height: 100vh;
     }
-    .amenities-list li {
-        transition: all 0.3s ease;
+
+    /* Hero Section */
+    .hero-section {
+        position: relative;
+        height: 70vh;
+        overflow: hidden;
     }
-    .amenities-list li:hover {
-        transform: translateX(5px);
+
+    .hero-image-container {
+        position: relative;
+        height: 100%;
     }
-    .card {
-        transition: all 0.3s ease;
+
+    .main-image {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
     }
-    .card:hover {
-        transform: translateY(-5px);
+
+    .main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
     }
-    .breadcrumb-item + .breadcrumb-item::before {
+
+    .main-image.placeholder {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .placeholder-content {
+        text-align: center;
         color: white;
     }
-    .modal-content {
-        border: none;
-        border-radius: 1rem;
+
+    .placeholder-content i {
+        margin-bottom: 1rem;
+        opacity: 0.8;
     }
-    .modal-header {
-        border-bottom: none;
-        padding: 2rem 2rem 1rem;
+
+    .image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        padding: 3rem 2rem 2rem;
+        color: white;
     }
-    .modal-body {
-        padding: 1rem 2rem;
+
+    .hotel-info {
+        max-width: 1200px;
+        margin: 0 auto;
     }
-    .modal-footer {
-        border-top: none;
-        padding: 1rem 2rem 2rem;
+
+    .hotel-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
-    .form-control {
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        border: 1px solid #e2e8f0;
+
+    .hotel-location {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
     }
-    .form-control:focus {
-        border-color: #4299e1;
-        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+
+    .hotel-location i {
+        margin-right: 0.5rem;
     }
-    .date-input-group {
+
+    .hotel-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .hotel-rating i {
+        color: #ffd700;
+        font-size: 1.2rem;
+    }
+
+    .rating-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    /* Thumbnail Gallery */
+    .thumbnail-gallery {
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+
+    .thumbnail {
+        width: 80px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: all 0.3s ease;
         position: relative;
     }
-    .date-input-group i {
+
+    .thumbnail.active {
+        border-color: #007bff;
+        transform: scale(1.1);
+    }
+
+    .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .thumbnail:hover {
+        transform: scale(1.05);
+    }
+
+    .more-images {
         position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #4a5568;
-        pointer-events: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    /* Main Content */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .hotel-details {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    /* Price Section */
+    .price-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 2rem;
+    }
+
+    .price-main {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+
+    .price-amount {
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    .price-period {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .price-features {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .price-features .feature {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .price-features .feature i {
+        font-size: 1.2rem;
+    }
+
+    /* Description Section */
+    .description-section {
+        margin-bottom: 2rem;
+    }
+
+    .description-section h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .description-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #666;
+    }
+
+    /* Gallery Section */
+    .gallery-section {
+        margin-bottom: 2rem;
+    }
+
+    .gallery-section h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        aspect-ratio: 4/3;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+
+    /* Amenities Section */
+    .amenities-section h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .amenities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .amenity-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .amenity-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+
+    .amenity-item i {
+        color: #007bff;
+        font-size: 1.2rem;
+        width: 20px;
+    }
+
+    /* Booking Sidebar */
+    .booking-sidebar {
+        position: sticky;
+        top: 2rem;
+    }
+
+    .booking-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .booking-header {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .booking-header h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .price-display {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .price-display .price {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .price-display .period {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .booking-form {
+        padding: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+    }
+
+    .booking-summary {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: #666;
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #333;
+        border-top: 2px solid #dee2e6;
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn-purchase {
+        width: 100%;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-purchase:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+    }
+
+    .booking-features {
+        padding: 1rem 1.5rem;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .booking-features .feature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.8rem;
+        color: #666;
+        text-align: center;
+    }
+
+    .booking-features .feature i {
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hotel-title {
+            font-size: 2rem;
+        }
+        
+        .price-section {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .price-features {
+            justify-content: center;
+        }
+        
+        .thumbnail-gallery {
+            position: static;
+            transform: none;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 1;
+        }
+        
+        .amenities-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 @endsection
 
-<!-- Booking Modal -->
-<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header">
-                <div>
-                    <h4 class="modal-title font-weight-bold" id="bookingModalLabel">Book Your Stay at {{ $hotel->name }}</h4>
-                    <p class="text-muted mb-0">Complete the form below to proceed with your booking</p>
-                </div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-info bg-light border-left border-info border-0 rounded-lg" style="border-left-width: 4px !important;">
-                    <div class="d-flex">
-                        <div class="mr-3">
-                            <i class="fas fa-info-circle text-info fa-lg"></i>
-                        </div>
-                        <div>
-                            <h6 class="font-weight-bold text-info mb-1">Demo Booking System</h6>
-                            <p class="mb-0">This is a demonstration booking form. In a real application, this would connect to a live booking system.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <form class="mt-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="check_in">Check-in Date</label>
-                                <div class="date-input-group">
-                                    <input type="date" class="form-control" id="check_in" name="check_in" required>
-                                    <i class="far fa-calendar"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="check_out">Check-out Date</label>
-                                <div class="date-input-group">
-                                    <input type="date" class="form-control" id="check_out" name="check_out" required>
-                                    <i class="far fa-calendar"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="room_type">Room Type</label>
-                                <select class="form-control" id="room_type" name="room_type">
-                                    <option value="standard">Standard Room</option>
-                                    <option value="deluxe">Deluxe Room</option>
-                                    <option value="suite">Suite</option>
-                                    <option value="family">Family Room</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="adults">Adults</label>
-                                <select class="form-control" id="adults" name="adults">
-                                    @for($i = 1; $i <= 10; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="children">Children</label>
-                                <select class="form-control" id="children" name="children">
-                                    @for($i = 0; $i <= 10; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="font-weight-bold" for="special_requests">Special Requests</label>
-                        <textarea class="form-control" id="special_requests" name="special_requests" rows="3" 
-                                  placeholder="Let us know if you have any special requirements..."></textarea>
-                    </div>
-
-                    <div class="bg-light p-4 rounded-lg mt-4">
-                        <h5 class="font-weight-bold mb-3">Price Summary</h5>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Room Rate (per night)</span>
-                            <span class="font-weight-bold">{{ $hotel->price_range }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Taxes & Fees</span>
-                            <span class="font-weight-bold">Calculated at checkout</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary px-4" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary px-4">
-                    <i class="fas fa-lock mr-2"></i>Continue to Payment
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
-@if($hotel->latitude && $hotel->longitude)
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&callback=initMap" async defer></script>
 <script>
-    function initMap() {
-        const hotelLocation = { lat: {{ $hotel->latitude }}, lng: {{ $hotel->longitude }} };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 15,
-            center: hotelLocation,
+    // Image gallery functionality
+    function changeMainImage(imageSrc, thumbnail) {
+        // Update main image
+        document.getElementById('mainImage').src = imageSrc;
+        
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.classList.remove('active');
         });
-        const marker = new google.maps.Marker({
-            position: hotelLocation,
-            map: map,
-            title: "{{ $hotel->name }}"
-        });
+        thumbnail.classList.add('active');
     }
-</script>
-@endif
 
-<script>
-    $(document).ready(function() {
-        // Initialize Fancybox for gallery
-        if (typeof $.fancybox !== 'undefined') {
-            $('[data-fancybox="gallery"]').fancybox({
-                buttons: [
-                    "zoom",
-                    "slideShow",
-                    "fullScreen",
-                    "thumbs",
-                    "close"
-                ]
+    // Set minimum dates for booking form
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const checkInInput = document.querySelector('input[name="check_in"]');
+        const checkOutInput = document.querySelector('input[name="check_out"]');
+        
+        if (checkInInput && checkOutInput) {
+            // Set minimum check-in date to today
+            checkInInput.min = today.toISOString().split('T')[0];
+            
+            // Set minimum check-out date to tomorrow
+            checkOutInput.min = tomorrow.toISOString().split('T')[0];
+            
+            // Update check-out minimum when check-in changes
+            checkInInput.addEventListener('change', function() {
+                const checkInDate = new Date(this.value);
+                const nextDay = new Date(checkInDate);
+                nextDay.setDate(checkInDate.getDate() + 1);
+                checkOutInput.min = nextDay.toISOString().split('T')[0];
+                
+                // If current check-out is before new minimum, update it
+                if (checkOutInput.value && new Date(checkOutInput.value) <= checkInDate) {
+                    checkOutInput.value = nextDay.toISOString().split('T')[0];
+                }
             });
         }
-        
-        // Set minimum check-out date one day after check-in
-        $('#check_in').on('change', function() {
-            const checkInDate = new Date($(this).val());
-            const nextDay = new Date(checkInDate);
-            nextDay.setDate(checkInDate.getDate() + 1);
-            
-            const year = nextDay.getFullYear();
-            const month = String(nextDay.getMonth() + 1).padStart(2, '0');
-            const day = String(nextDay.getDate()).padStart(2, '0');
-            
-            $('#check_out').attr('min', `${year}-${month}-${day}`);
-            
-            if ($('#check_out').val() && new Date($('#check_out').val()) <= checkInDate) {
-                $('#check_out').val(`${year}-${month}-${day}`);
-            }
-        });
-        
-        // Set today as minimum check-in date
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        $('#check_in').attr('min', `${year}-${month}-${day}`);
     });
 </script>
 @endpush 

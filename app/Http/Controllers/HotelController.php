@@ -73,6 +73,53 @@ class HotelController extends Controller
     }
 
     /**
+     * Process hotel booking.
+     */
+    public function book(Request $request, Destination $destination, Hotel $hotel)
+    {
+        // Ensure the hotel belongs to the specified destination
+        if ($hotel->destination_id !== $destination->id) {
+            abort(404);
+        }
+
+        $request->validate([
+            'check_in' => 'required|date|after_or_equal:today',
+            'check_out' => 'required|date|after:check_in',
+            'guests' => 'required|integer|min:1|max:10',
+        ]);
+
+        // Calculate total amount (simplified - in real app, calculate based on dates and room type)
+        $checkIn = \Carbon\Carbon::parse($request->check_in);
+        $checkOut = \Carbon\Carbon::parse($request->check_out);
+        $nights = $checkIn->diffInDays($checkOut);
+        
+        // Use minimum price for calculation
+        $pricePerNight = $hotel->price_min ?? 100;
+        $totalAmount = $nights * $pricePerNight;
+
+        // Store booking data in session for payment
+        session([
+            'hotel_booking' => [
+                'hotel_id' => $hotel->id,
+                'destination_id' => $destination->id,
+                'check_in' => $request->check_in,
+                'check_out' => $request->check_out,
+                'guests' => $request->guests,
+                'nights' => $nights,
+                'price_per_night' => $pricePerNight,
+                'total_amount' => $totalAmount,
+                'hotel_name' => $hotel->name,
+                'destination_name' => $destination->name,
+            ],
+            'payment_amount' => $totalAmount,
+            'payment_currency' => 'USD',
+        ]);
+
+        // Redirect to payment page
+        return redirect()->route('payment.checkout');
+    }
+
+    /**
      * Search hotels.
      */
     public function search(Request $request)
