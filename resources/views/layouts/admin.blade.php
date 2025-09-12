@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <!-- Dynamic Button Colors CSS -->
-    <link rel="stylesheet" href="{{ secure_url(route('dynamic.css')) }}?v={{ \App\Models\Admin\Setting::get('css_version', time()) }}" type="text/css">
+    <link rel="stylesheet" href="{{ route('dynamic.css') }}?v={{ \App\Models\Admin\Setting::get('css_version', time()) }}" type="text/css">
 
     <style>
 
@@ -59,16 +59,7 @@
             <!-- Logo -->
             <div class="flex items-center justify-center h-16 px-4 bg-gray-900">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center p-5">
-                     @if(isset($settings['site_logo']))
-                    <img
-                    
-                    src="{{ $settings['site_logo'] }}" alt="{{ $settings['company_name'] ?? 'MyTravel' }}" >
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M5.5 16a.5.5 0 01-.5-.5v-6a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v6a.5.5 0 01-.5.5h-1zm3 0a.5.5 0 01-.5-.5v-6a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v6a.5.5 0 01-.5.5h-1zm4.5-.5a.5.5 0 00.5-.5v-6a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v6a.5.5 0 00.5.5h1z"/>
-                        <path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z" clip-rule="evenodd"/>
-                    </svg>
-                @endif
+                    <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-8 w-auto">
                 </a>
             </div>
             

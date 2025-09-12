@@ -7,11 +7,7 @@
     <!-- Hero Section with Search -->
     <!-- Hero Section with Search -->
 <section class="hero-section min-h-screen flex items-center justify-center relative overflow-hidden" 
-    @if(\App\Models\Admin\Setting::get('hero_bg_image'))
-        style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('{{ filter_var(\App\Models\Admin\Setting::get('hero_bg_image'), FILTER_VALIDATE_URL) ? \App\Models\Admin\Setting::get('hero_bg_image') : secure_asset(\App\Models\Admin\Setting::get('hero_bg_image')) }}'); background-size: cover; background-position: center;"
-    @else
-        class="hero-gradient" 
-    @endif
+    style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('{{ asset('images/hero.jpg') }}'); background-size: cover; background-position: center;"
 >
     <div class="container mx-auto px-4 py-16 relative z-10">
         <div class="text-center text-white mb-12 max-w-4xl mx-auto">
@@ -221,12 +217,7 @@
     position: relative;
 }
 
-.hero-gradient {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=3273&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
+/* Hero section now uses static image from public/images/hero.jpg */
 </style>
 
 @endsection

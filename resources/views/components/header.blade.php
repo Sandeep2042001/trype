@@ -3,16 +3,7 @@
         <!-- Logo -->
         <div class="text-2xl font-bold">
             <a href="/" class="flex items-center space-x-2 transition transform hover:scale-105">
-                @if(isset($settings['site_logo']))
-                    <img
-                    
-                    src="{{ $settings['site_logo'] }}" alt="{{ $settings['company_name'] ?? 'MyTravel' }}" >
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M5.5 16a.5.5 0 01-.5-.5v-6a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v6a.5.5 0 01-.5.5h-1zm3 0a.5.5 0 01-.5-.5v-6a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v6a.5.5 0 01-.5.5h-1zm4.5-.5a.5.5 0 00.5-.5v-6a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v6a.5.5 0 00.5.5h1z"/>
-                        <path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z" clip-rule="evenodd"/>
-                    </svg>
-                @endif
+                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['company_name'] ?? 'Tryp' }}" class="h-8 w-auto">
             </a>
         </div>
         

@@ -1,5 +1,5 @@
 <div class="search-bar p-6 rounded-2xl shadow-2xl">
-    <form action="{{ route('destinations.search') }}" method="GET">
+    <form action="{{ secure_url(route('destinations.search')) }}" method="GET">
         <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
             <div class="flex-1">
                 <div class="relative">
@@ -66,7 +66,7 @@
             
             if (query.length < 2) return;
             
-            fetch(`${window.location.protocol}//${window.location.host}/api/destinations/search?query=${encodeURIComponent(query)}`)
+            fetch(`/api/destinations/search?query=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     searchResults.innerHTML = '';

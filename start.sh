@@ -27,10 +27,6 @@ php artisan storage:link || true
 echo "Testing PHP functionality..."
 php debug.php
 
-# Copy real images from storage
-echo "Copying real images from storage..."
-php copy-real-images.php
-
 # Test database connection
 echo "Testing database connection..."
 php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Database connected successfully'; } catch(Exception \$e) { echo 'Database connection failed: ' . \$e->getMessage(); }" || echo "Database connection test failed"
