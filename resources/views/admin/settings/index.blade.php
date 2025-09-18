@@ -332,7 +332,7 @@
                         <h4 class="font-medium mb-3">Hero Content</h4>
                         <div class="mb-4">
                             <label for="hero_heading" class="block text-sm font-medium text-gray-700 mb-1">Hero Heading</label>
-                            <input type="text" name="hero_heading" id="hero_heading" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" value="{{ $appearanceSettings['hero_heading']->value ?? 'Discover Your Perfect Getaway' }}">
+                            <input type="text" name="hero_heading" id="hero_heading" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" value="{{ $appearanceSettings['hero_heading']->value ?? 'Discover Your Perfect Getaways' }}">
                         </div>
                         
                         <div class="mb-4">
