@@ -16,7 +16,7 @@
                     Vacation Bundles
                 </h1>
                 <p class="mt-4 text-lg md:text-xl text-white/90 drop-shadow-md">
-                    Find Your Perfect Getaway Package
+                    Find Your Perfect Getaways Package
                 </p>
             </div>
         </div>
